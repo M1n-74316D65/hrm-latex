@@ -26,6 +26,8 @@ To compile the LaTeX documents, you will need a LaTeX distribution (e.g., TeX Li
 
 This repository is licensed under the [The Unlicense](https://unlicense.org). See the `LICENSE` file for more information.
 
+**Important:** The contents of the `assignments/images` folder **are NOT** covered by the Unlicense. These images are the property of their respective authors and are included here under their original licenses. Please respect the license terms of each individual image.
+
 ## Author
 
 [github.com/M1n-74316D65](https://github.com/M1n-74316D65)
