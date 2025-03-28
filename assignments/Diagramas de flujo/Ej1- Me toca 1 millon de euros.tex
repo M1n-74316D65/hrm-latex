@@ -1,0 +1,77 @@
+\documentclass{article}
+% --- Paquetes ---
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{tikz}
+\usepackage{graphicx} % <--- Necesario para resizebox
+
+% --- Librerías TikZ ---
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc}
+
+\title{¿Qué hacer si gano 1 Millón de Euros?}
+\author{David Mato}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+El diagrama de la siguiente página muestra los pasos y decisiones posibles al recibir un premio inesperado. 
+
+\clearpage % <--- USA ESTE COMANDO EN LUGAR DE \newpage
+
+% Envuelve el tikzpicture en resizebox para ajustar al ancho de la página
+\noindent % Evita indentación si está al inicio de párrafo
+\resizebox{0.95\textwidth}{!}{ % Inicio de resizebox
+\begin{tikzpicture}[
+    node distance=0.75cm and 1.5cm, % Mantenemos distancias originales por ahora
+    auto,
+    % --- Estilos de Nodo ---
+    startstop/.style={rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30, align=center},
+    process/.style={rectangle, minimum width=3.5cm, minimum height=1cm, text centered, draw=black, fill=orange!30, align=center},
+    decision/.style={diamond, aspect=1.8, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30, align=center},
+    % --- Estilo de Línea ---
+    line/.style={draw, -{Latex[length=3mm, width=2mm]}}
+]
+
+% --- Nodos del Diagrama ---
+\node (start)     [startstop]                           {Inicio: \\ ¡Gano 1 Millón €!};
+\node (verify)    [process, below=of start]             {Verificar Autenticidad \\ y Cobrar el Premio};
+\node (taxes)     [process, below=of verify]            {Calcular Impuestos (Hacienda) \\ y Determinar Cantidad Neta};
+\node (advice)    [decision, below=of taxes, yshift=-0.5cm] {¿Buscar Asesoramiento \\ Profesional?};
+\node (getadvice) [process, below left=of advice, xshift=-2.5cm] {Consultar Asesor \\ Financiero / Fiscal};
+\coordinate (advice_join) at ($(advice) + (0,-3cm)$); 
+\node (debts)     [decision] at (advice_join)           {¿Saldar Deudas \\ Pendientes?};
+\node (paydebts)  [process, below left=of debts, xshift=-2.5cm] {Pagar Préstamos, \\ Hipoteca, Tarjetas...};
+\coordinate (debts_join) at ($(debts) + (0,-3cm)$);
+\node (invest)    [decision] at (debts_join)            {¿Invertir una Parte \\ Significativa?};
+\node (makeinvest)[process, below left=of invest, xshift=-2.5cm] {Seleccionar y Realizar \\ Inversiones (Fondos, \\ Inmuebles, Negocio...)};
+\coordinate (invest_join) at ($(invest) + (0,-3.5cm)$);
+\node (share)     [decision] at (invest_join)           {¿Compartir / Donar?};
+\node (giveshare) [process, below left=of share, xshift=-2.5cm] {Ayudar Familia/Amigos \\ Donar a Caridad};
+\coordinate (share_join) at ($(share) + (0,-3cm)$);
+\node (plan)      [process] at (share_join)             {Planificación Financiera \\ y Gestión a Largo Plazo};
+\node (end)       [startstop, below=of plan]            {Fin: \\ Gestionar Patrimonio \\ y Disfrutar con Cabeza};
+
+% --- Conexiones (Flechas) ---
+\path [line] (start)      -- (verify);
+\path [line] (verify)     -- (taxes);
+\path [line] (taxes)      -- (advice);
+\path [line] (advice)     -- node[midway, above left, xshift=-2mm] {Sí} (getadvice);
+\path [line] (getadvice.south) |- (debts); 
+\path [line] (advice)     -- node[midway, above right, xshift=2mm] {No} (debts);
+\path [line] (debts)      -- node[midway, above left, xshift=-2mm] {Sí} (paydebts);
+\path [line] (paydebts.south) |- (invest); 
+\path [line] (debts)      -- node[midway, above right, xshift=2mm] {No} (invest);
+\path [line] (invest)     -- node[midway, above left, xshift=-2mm] {Sí} (makeinvest);
+\path [line] (makeinvest.south) |- (share); 
+\path [line] (invest)     -- node[midway, above right, xshift=2mm] {No} (share);
+\path [line] (share)      -- node[midway, above left, xshift=-2mm] {Sí} (giveshare);
+\path [line] (giveshare.south) |- (plan); 
+\path [line] (share)      -- node[midway, above right, xshift=2mm] {No} (plan);
+\path [line] (plan)       -- (end);
+
+\end{tikzpicture} 
+} % Fin de resizebox
+
+\end{document}

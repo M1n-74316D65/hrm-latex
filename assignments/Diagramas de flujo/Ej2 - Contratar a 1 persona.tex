@@ -1,0 +1,83 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc} % Para caracteres en español
+\usepackage[spanish]{babel} % Opcional, para guiones etc. en español
+\usepackage{tikz}
+% Asegúrate de usar las librerías necesarias
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc} % Añadido calc para posibles ajustes finos
+
+\title{Proceso de Contratación de Personal} % Título más genérico
+\author{David Mato}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+El diagrama de la siguiente página muestra los pasos y decisiones posibles al contratar 1 persona, incluyendo posibles flujos alternativos.
+
+\newpage % Para que el diagrama quede en su propia página
+
+\begin{tikzpicture}[
+    node distance=0.5cm and 0cm, % Aumentada distancia vertical
+    auto,
+    % --- Estilos de Nodo ---
+    startstop/.style={rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30},
+    io/.style={parallelogram, parallelogram skew=0.7, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30},
+    process/.style={rectangle, minimum width=3.5cm, minimum height=1cm, text centered, text width=3.3cm, draw=black, fill=orange!30},
+    decision/.style={diamond, aspect=1.8, minimum width=3cm, minimum height=1cm, text centered, text width=2.8cm, draw=black, fill=green!30}, % Ajustado text width
+    % --- Estilo de Línea ---
+    line/.style={
+        draw,
+        -{Latex[length=3mm, width=2mm]} % Flecha más grande
+    }
+]
+
+% --- Nodos del Proceso de Contratación ---
+\node (inicio) [startstop] {Inicio: Detectar Necesidad};
+\node (definir) [process, below=of inicio] {Definir Perfil y Publicar Vacante};
+\node (filtrar) [process, below=of definir] {Recepción y Filtrado Inicial de CVs};
+
+% --- NUEVA DECISIÓN 1 ---
+\node (decision_cvs) [decision, below=of filtrar, yshift=-0.2cm] {¿Hay CVs adecuados?};
+
+\node (entrevistar) [process, below=of decision_cvs, yshift=-0.2cm] {Entrevistas y Evaluaciones};
+
+% --- NUEVA DECISIÓN 2 ---
+\node (decision_aptos) [decision, below=of entrevistar, yshift=-0.2cm] {¿Hay candidato/s apto/s?};
+
+\node (seleccionar) [process, below=of decision_aptos, yshift=-0.2cm] {Selección del Candidato Finalista};
+\node (ofertar) [io, below=of seleccionar] {Realizar Oferta de Empleo};
+\node (decision_oferta) [decision, below=of ofertar, yshift=-0.5cm] {¿Acepta la Oferta?};
+\node (formalizar) [process, below=of decision_oferta, yshift=-0.5cm] {Formalizar Contratación (Contrato, Docs, Onboarding)};
+\node (fin_ok) [startstop, below=of formalizar] {Fin: Persona Contratada};
+% Nodo si la oferta es rechazada - texto mejorado
+\node (fin_no_oferta) [startstop, right=of decision_oferta, xshift=3.5cm] {Fin: Oferta Rechazada};
+
+% --- Conexiones Principales (Flujo 'Sí') ---
+\path [line] (inicio) -- (definir);
+\path [line] (definir) -- (filtrar);
+\path [line] (filtrar) -- (decision_cvs);
+\path [line] (decision_cvs) -- node[anchor=east, xshift=-2mm] {Sí} (entrevistar); % Etiqueta 'Sí'
+\path [line] (entrevistar) -- (decision_aptos);
+\path [line] (decision_aptos) -- node[anchor=east, xshift=-2mm] {Sí} (seleccionar); % Etiqueta 'Sí'
+\path [line] (seleccionar) -- (ofertar);
+\path [line] (ofertar) -- (decision_oferta);
+\path [line] (decision_oferta) -- node[anchor=east, xshift=-2mm] {Sí} (formalizar); % Etiqueta 'Sí'
+\path [line] (formalizar) -- (fin_ok);
+
+% --- Conexiones Alternativas (Flujos 'No') ---
+
+% No hay CVs adecuados -> Volver a Definir Perfil
+\path [line] (decision_cvs.west) -- node[anchor=south, midway, yshift=1mm] {No} ++(-2.5,0) |- (definir.west);
+% Se usa ++(-2.5,0) para mover el inicio de la línea a la izquierda antes de usar |- para conectar.
+
+% No hay candidatos aptos -> Volver a Definir Perfil
+\path [line] (decision_aptos.west) -- node[anchor=south, midway, yshift=1mm] {No} ++(-3.5,0) |- (definir.west);
+% Se usa ++(-3.5,0) para mover más a la izquierda y evitar solapamiento visual con la línea anterior
+
+% Oferta Rechazada -> Fin alternativo (como estaba antes, pero con nodo renombrado)
+\path [line] (decision_oferta) -- node[anchor=south] {No} (fin_no_oferta);
+
+\end{tikzpicture}
+
+\end{document}
